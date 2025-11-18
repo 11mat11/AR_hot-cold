@@ -1,0 +1,24 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
+
+public class ScanToggle : MonoBehaviour
+{
+    public ARPlaneManager planeManager;
+
+    private bool scanningEnabled = true;
+
+    public TMP_Text buttonText;
+
+    public void ToggleScanning()
+    {
+        scanningEnabled = !scanningEnabled;
+
+        planeManager.requestedDetectionMode =
+            scanningEnabled ? PlaneDetectionMode.Horizontal : PlaneDetectionMode.None;
+
+        Debug.Log("Scanning: " + (scanningEnabled ? "ON" : "OFF"));
+        buttonText.text = scanningEnabled ? "Scanning..." : "Stopped";
+    }
+}
