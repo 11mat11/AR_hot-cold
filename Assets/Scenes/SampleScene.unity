@@ -336,7 +336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   planeManager: {fileID: 151853166}
-  buttonText: {fileID: 0}
+  buttonText: {fileID: 1402374329}
 --- !u!1 &173779100
 GameObject:
   m_ObjectHideFlags: 0
