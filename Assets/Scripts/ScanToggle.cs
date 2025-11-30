@@ -11,6 +11,8 @@ public class ScanToggle : MonoBehaviour
 
     public TMP_Text buttonText;
 
+    public CreateObjectInRandomPlace createObjectScript;
+
     public void ToggleScanning()
     {
         scanningEnabled = !scanningEnabled;
@@ -18,7 +20,15 @@ public class ScanToggle : MonoBehaviour
         planeManager.requestedDetectionMode =
             scanningEnabled ? PlaneDetectionMode.Horizontal : PlaneDetectionMode.None;
 
-        Debug.Log("Scanning: " + (scanningEnabled ? "ON" : "OFF"));
         buttonText.text = scanningEnabled ? "Scanning..." : "Stopped";
+
+        if (!scanningEnabled && createObjectScript != null)
+        {
+            createObjectScript.CreateObject();
+        }
+        else if (scanningEnabled && createObjectScript != null)
+        {
+            createObjectScript.ClearPreviousObject();
+        }
     }
 }
