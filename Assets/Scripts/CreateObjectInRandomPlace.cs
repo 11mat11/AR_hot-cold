@@ -6,9 +6,12 @@ public class CreateObjectInRandomPlace : MonoBehaviour
 {
     public ARPlaneManager planeManager;
 
+    public List<ElementPrefabConfig> elementPrefabs = new List<ElementPrefabConfig>();
+
     public GameObject objectPrefab;
 
     private GameObject currentObject;
+    private ElementType currentElementType;
 
     public void CreateObject()
     {
@@ -49,5 +52,21 @@ public class CreateObjectInRandomPlace : MonoBehaviour
             Destroy(currentObject);
             currentObject = null;
         }
+    }
+
+    /// <summary>
+    /// Get the element type of the currently spawned object.
+    /// </summary>
+    public ElementType GetCurrentElementType()
+    {
+        return currentElementType;
+    }
+
+    /// <summary>
+    /// Get reference to the currently spawned object.
+    /// </summary>
+    public GameObject GetCurrentObject()
+    {
+        return currentObject;
     }
 }

@@ -32,6 +32,11 @@ public class SpatialSound : MonoBehaviour
         ConfigureAudioSource();
     }
 
+    void Start()
+    {
+        StartPulse();
+    }
+
     void OnEnable()
     {
         TryHookInteractable();
@@ -46,6 +51,7 @@ public class SpatialSound : MonoBehaviour
     void OnDestroy()
     {
         UnhookInteractable();
+        StopPulse();
     }
 
     public void StartAfterPlaced()
