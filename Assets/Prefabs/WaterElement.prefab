@@ -28,8 +28,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 913165617406531853}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -4847,6 +4847,7 @@ GameObject:
   - component: {fileID: 913165617406531853}
   - component: {fileID: 947864973947185834}
   - component: {fileID: 1644734028758033028}
+  - component: {fileID: 4261918306842967091}
   m_Layer: 0
   m_Name: WaterElement
   m_TagString: Untagged
@@ -4983,3 +4984,17 @@ MonoBehaviour:
   intervalSeconds: 2
   fullVolumeDistance: 0.5
   noVolumeDistance: 5
+--- !u!114 &4261918306842967091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6324602663943922825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 182510476686c434da412a93a8763d97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  triggerDistance_point: 0.2
+  triggerDistance_visable: 1.3

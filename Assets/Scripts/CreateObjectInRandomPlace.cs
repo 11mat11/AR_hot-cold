@@ -6,10 +6,8 @@ public class CreateObjectInRandomPlace : MonoBehaviour
 {
     public ARPlaneManager planeManager;
 
-    public List<ElementPrefabConfig> elementPrefabs = new List<ElementPrefabConfig>();
-
-    public GameObject objectPrefab;
-
+    public List<GameObject> elementPrefabs = new List<GameObject>();
+    public float heightOffset = 1.0f;
     private GameObject currentObject;
     private ElementType currentElementType;
 
@@ -27,9 +25,9 @@ public class CreateObjectInRandomPlace : MonoBehaviour
 
         int randomIndex = Random.Range(0, planes.Count);
         var randomPlane = planes[randomIndex];
-
+        int random_item = UnityEngine.Random.Range(0, elementPrefabs.Count);
         Vector3 spawnPos = GetRandomPointOnPlane(randomPlane);
-        currentObject = Instantiate(objectPrefab, spawnPos, Quaternion.identity);
+        currentObject = Instantiate(elementPrefabs[random_item], spawnPos, Quaternion.identity);
 
         Debug.Log("Object created at: " + spawnPos);
     }
@@ -42,7 +40,7 @@ public class CreateObjectInRandomPlace : MonoBehaviour
             UnityEngine.Random.Range(-size.y / 2f, size.y / 2f)
         );
 
-        return plane.transform.TransformPoint(new Vector3(randomPoint2D.x, 0, randomPoint2D.y));
+        return plane.transform.TransformPoint(new Vector3(randomPoint2D.x, heightOffset, randomPoint2D.y));
     }
 
     public void ClearPreviousObject()
