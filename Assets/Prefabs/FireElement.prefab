@@ -4982,6 +4982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpatialSound
   clip: {fileID: 8300000, guid: f15734b8fbc0fa2409854eaec2b6ac44, type: 3}
   intervalSeconds: 2
+  volume: 0.2
   fullVolumeDistance: 0.5
   noVolumeDistance: 5
 --- !u!114 &-4395294299351346263

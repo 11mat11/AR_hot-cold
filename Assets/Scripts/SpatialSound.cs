@@ -17,6 +17,10 @@ public class SpatialSound : MonoBehaviour
     public AudioClip clip;
     public float intervalSeconds = 2f;
 
+    [Header("Volume")]
+    [Range(0f, 1f)]
+    public float volume = 1f;
+
     [Header("Distance (meters)")]
     public float fullVolumeDistance = 0.5f;
     public float noVolumeDistance = 5f;
@@ -125,7 +129,7 @@ public class SpatialSound : MonoBehaviour
         var wait = new WaitForSeconds(Mathf.Max(0.1f, intervalSeconds));
         while (enabled)
         {
-            audioSource.PlayOneShot(clip);
+            audioSource.PlayOneShot(clip, volume);
             yield return wait;
         }
     }
