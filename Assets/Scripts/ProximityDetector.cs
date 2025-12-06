@@ -22,7 +22,9 @@ public class ProximityDetector : MonoBehaviour
             if (dist < triggerDistance_point)
             {
                 Debug.Log("zdobywasz punkt od:" + gameObject.name);
-
+                if (ScoreManager.Instance != null)
+                    ScoreManager.Instance.AddPoint();
+                Destroy(gameObject);
             }
         }
         else
