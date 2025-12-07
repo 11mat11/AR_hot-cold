@@ -4,11 +4,17 @@ public class ProximityDetector : MonoBehaviour
 {
     public float triggerDistance_point = 0.2f; // odległość w metrach
     public float triggerDistance_visable = 3.0f;
+    public CreateObjectInRandomPlace creator;
     private Renderer[] renderers;
     void Start()
     {
         // Pobieramy wszystkie rendery obiektu i dzieci
         renderers = GetComponentsInChildren<Renderer>();
+    }
+    void Awake()
+    {
+        if (creator == null)
+            creator = FindObjectOfType<CreateObjectInRandomPlace>();
     }
     void Update()
     {
@@ -24,6 +30,8 @@ public class ProximityDetector : MonoBehaviour
                 Debug.Log("zdobywasz punkt od:" + gameObject.name);
                 if (ScoreManager.Instance != null)
                     ScoreManager.Instance.AddPoint();
+                if (creator != null)
+                    creator.CreateObject();
                 Destroy(gameObject);
             }
         }
