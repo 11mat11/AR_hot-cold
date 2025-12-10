@@ -4998,5 +4998,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   triggerDistance_point: 0.2
-  triggerDistance_visable: 1.3
-  creator: {fileID: 0}
+  triggerDistance_visible: 3
+  destructionScript: {fileID: 0}
+  destructionMethodName: Break
+  destructionDelay: 1
+  fadeOut: 0
+  fadeDuration: 3
