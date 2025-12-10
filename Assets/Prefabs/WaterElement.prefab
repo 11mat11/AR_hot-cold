@@ -611,7 +611,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.22
+      scalar: 0.05
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -4848,6 +4848,7 @@ GameObject:
   - component: {fileID: 947864973947185834}
   - component: {fileID: 1644734028758033028}
   - component: {fileID: 4261918306842967091}
+  - component: {fileID: 8598224972638649003}
   m_Layer: 0
   m_Name: WaterElement
   m_TagString: Untagged
@@ -4999,8 +5000,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   triggerDistance_point: 0.2
   triggerDistance_visible: 3
-  destructionScript: {fileID: 0}
+  destructionScript: {fileID: 8598224972638649003}
   destructionMethodName: Break
   destructionDelay: 1
-  fadeOut: 0
+  fadeOut: 1
   fadeDuration: 3
+--- !u!114 &8598224972638649003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6324602663943922825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00565493537fc04cbc30f096de04713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaterPickup
+  splashPrefab: {fileID: 7051161264409095752, guid: 0ad2f89ebfc50bd43a76aea980f28b22, type: 3}

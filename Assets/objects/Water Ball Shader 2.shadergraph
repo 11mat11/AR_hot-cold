@@ -1862,8 +1862,8 @@
     "m_ObjectId": "1ca6ead6e5ee4ebe915127675f85c66d",
     "m_Title": "Vertex Displacement",
     "m_Position": {
-        "x": -2803.000244140625,
-        "y": -324.0001220703125
+        "x": -2803.0,
+        "y": -324.0
     }
 }
 
@@ -1928,8 +1928,8 @@
     "m_ObjectId": "1f43a4dfffd1441faf39b2d5e2577499",
     "m_Title": "Normals",
     "m_Position": {
-        "x": -2308.000244140625,
-        "y": 2772.000244140625
+        "x": -2308.0,
+        "y": 2772.0
     }
 }
 
@@ -3745,7 +3745,7 @@
     "m_Title": "Disolve",
     "m_Position": {
         "x": -2552.0,
-        "y": 1493.0001220703125
+        "y": 1493.0
     }
 }
 
@@ -5847,7 +5847,7 @@
     "m_ObjectId": "9d3cde9ae02c4315b6a7e1276b77aae4",
     "m_Title": "Scene Color Distortion",
     "m_Position": {
-        "x": -3346.000244140625,
+        "x": -3346.0,
         "y": 433.0
     }
 }
