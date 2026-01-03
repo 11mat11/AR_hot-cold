@@ -6,10 +6,10 @@ public class ProximityDetector : MonoBehaviour
     public float triggerDistance_point = 0.2f;
     public float triggerDistance_visible = 3.0f;
 
-    public MonoBehaviour destructionScript;  // DOWOLNY skrypt destrukcji
-    public string destructionMethodName = "Break"; // Nazwa metody destrukcji
+    public MonoBehaviour destructionScript;
+    public string destructionMethodName = "Break";
 
-    public float destructionDelay = 1.0f;   // czas na animację destrukcji
+    public float destructionDelay = 1.0f;
     public bool fadeOut = true;
     public float fadeDuration = 3.0f;
 
@@ -25,7 +25,7 @@ public class ProximityDetector : MonoBehaviour
     void Awake()
     {
         if (creator == null)
-            creator = FindObjectOfType<CreateObjectInRandomPlace>();
+            creator = FindFirstObjectByType<CreateObjectInRandomPlace>();
     }
 
     void Update()
@@ -43,11 +43,6 @@ public class ProximityDetector : MonoBehaviour
             {
                 triggered = true;
 
-                Debug.Log("zdobywasz punkt od:" + gameObject.name);
-
-                if (ScoreManager.Instance != null)
-                    ScoreManager.Instance.AddPoint();
-
                 StartCoroutine(HandleDestructionSequence());
             }
         }
@@ -59,24 +54,22 @@ public class ProximityDetector : MonoBehaviour
 
     IEnumerator HandleDestructionSequence()
     {
-        // 1. URUCHOM DESTRUKCJĘ (Break, Explode, Collapse – cokolwiek ustawisz)
+        if (ScoreManager.Instance != null)
+            ScoreManager.Instance.RegisterObjectFound();
+
+        if (creator != null)
+            creator.RemoveObjectFromList(gameObject);
+
         if (destructionScript != null && !string.IsNullOrEmpty(destructionMethodName))
         {
             destructionScript.Invoke(destructionMethodName, 0f);
         }
 
-        // 2. CZEKAJ NA ANIMACJĘ ROZPADU
         yield return new WaitForSeconds(destructionDelay);
 
-        // 3. FADE OUT (opcjonalnie)
         if (fadeOut)
             yield return StartCoroutine(FadeOutRoutine());
 
-        // 4. STWÓRZ NOWY OBIEKT
-        if (creator != null)
-            creator.CreateObject();
-
-        // 5. USUŃ OBECNY OBIEKT
         Destroy(gameObject);
     }
 

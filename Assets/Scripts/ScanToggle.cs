@@ -40,11 +40,12 @@ public class ScanToggle : MonoBehaviour
 
         if (!scanningEnabled && createObjectScript != null)
         {
-            createObjectScript.CreateObject();
+            createObjectScript.SpawnLevelObjects();
         }
         else if (scanningEnabled && createObjectScript != null)
         {
-            createObjectScript.ClearPreviousObject();
+            createObjectScript.ClearPreviousObjects();
+            ScoreManager.Instance.Reset();
         }
     }
 

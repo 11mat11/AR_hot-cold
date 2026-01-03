@@ -337,9 +337,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   planeManager: {fileID: 151853166}
   buttonText: {fileID: 1402374329}
-  buttonIcon: {fileID: 1418760533}
-  scanningIcon: {fileID: 21300000, guid: bde57b7e76eb5674796065d740264cfa, type: 3}
-  stoppedIcon: {fileID: 21300000, guid: 3bef8e6773c10dd49b96ad1d4c5e0eb5, type: 3}
+  buttonIcon: {fileID: 0}
+  scanningIcon: {fileID: 0}
+  stoppedIcon: {fileID: 0}
   scanningText: Scanning
   stoppedText: Stopped
   createObjectScript: {fileID: 151853176}
@@ -357,10 +357,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CreateObjectInRandomPlace
   planeManager: {fileID: 151853166}
   elementPrefabs:
-  - {fileID: 6324602663943922825, guid: 98139df0420923141adbd39224579ad1, type: 3}
-  - {fileID: 6324602663943922825, guid: fb933bcb4dfbeda40a8be1d9d24508c3, type: 3}
-  - {fileID: 6324602663943922825, guid: f69fcdfc039375447a172a68bb484e71, type: 3}
   - {fileID: 6324602663943922825, guid: 6ce02acb6d3bcac4cb7c493ac8b004a3, type: 3}
+  - {fileID: 6324602663943922825, guid: f69fcdfc039375447a172a68bb484e71, type: 3}
+  - {fileID: 6324602663943922825, guid: fb933bcb4dfbeda40a8be1d9d24508c3, type: 3}
+  - {fileID: 6324602663943922825, guid: 98139df0420923141adbd39224579ad1, type: 3}
   heightOffset: 1
 --- !u!1 &173779100
 GameObject:

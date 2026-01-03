@@ -8,28 +8,32 @@ public class CreateObjectInRandomPlace : MonoBehaviour
 
     public List<GameObject> elementPrefabs = new List<GameObject>();
     public float heightOffset = 1.0f;
-    private GameObject currentObject;
-    private ElementType currentElementType;
+    private List<GameObject> currentObjects = new List<GameObject>();
 
-    public void CreateObject()
+    public void SpawnLevelObjects()
+    {
+        int countToSpawn = ScoreManager.Instance.ObjectsRequiredPerLevel;
+
+        for (int i = 0; i < countToSpawn; i++)
+        {
+            CreateSingleObject();
+        }
+    }
+
+    private void CreateSingleObject()
     {
         var planes = new List<ARPlane>();
-        foreach (var p in planeManager.trackables)
-            planes.Add(p);
+        foreach (var p in planeManager.trackables) planes.Add(p);
 
-        if (planes.Count == 0)
-        {
-            Debug.Log("No planes available to place the object.");
-            return;
-        }
+        if (planes.Count == 0) return;
 
         int randomIndex = Random.Range(0, planes.Count);
         var randomPlane = planes[randomIndex];
-        int random_item = UnityEngine.Random.Range(0, elementPrefabs.Count);
-        Vector3 spawnPos = GetRandomPointOnPlane(randomPlane);
-        currentObject = Instantiate(elementPrefabs[random_item], spawnPos, Quaternion.identity);
+        int randomItemIndex = Random.Range(0, elementPrefabs.Count);
 
-        Debug.Log("Object created at: " + spawnPos);
+        Vector3 spawnPos = GetRandomPointOnPlane(randomPlane);
+        GameObject newObj = Instantiate(elementPrefabs[randomItemIndex], spawnPos, Quaternion.identity);
+        currentObjects.Add(newObj);
     }
 
     Vector3 GetRandomPointOnPlane(ARPlane plane)
@@ -43,28 +47,18 @@ public class CreateObjectInRandomPlace : MonoBehaviour
         return plane.transform.TransformPoint(new Vector3(randomPoint2D.x, heightOffset, randomPoint2D.y));
     }
 
-    public void ClearPreviousObject()
+    public void ClearPreviousObjects()
     {
-        if (currentObject != null)
+        foreach (var obj in currentObjects)
         {
-            Destroy(currentObject);
-            currentObject = null;
+            if (obj != null) Destroy(obj);
         }
+        currentObjects.Clear();
     }
 
-    /// <summary>
-    /// Get the element type of the currently spawned object.
-    /// </summary>
-    public ElementType GetCurrentElementType()
+    public void RemoveObjectFromList(GameObject obj)
     {
-        return currentElementType;
-    }
-
-    /// <summary>
-    /// Get reference to the currently spawned object.
-    /// </summary>
-    public GameObject GetCurrentObject()
-    {
-        return currentObject;
+        if (currentObjects.Contains(obj))
+            currentObjects.Remove(obj);
     }
 }
