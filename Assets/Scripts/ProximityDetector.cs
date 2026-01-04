@@ -54,18 +54,18 @@ public class ProximityDetector : MonoBehaviour
 
     IEnumerator HandleDestructionSequence()
     {
-        if (ScoreManager.Instance != null)
-            ScoreManager.Instance.RegisterObjectFound();
-
-        if (creator != null)
-            creator.RemoveObjectFromList(gameObject);
-
         if (destructionScript != null && !string.IsNullOrEmpty(destructionMethodName))
         {
             destructionScript.Invoke(destructionMethodName, 0f);
         }
 
         yield return new WaitForSeconds(destructionDelay);
+
+        if (ScoreManager.Instance != null)
+            ScoreManager.Instance.RegisterObjectFound();
+
+        if (creator != null)
+            creator.RemoveObjectFromList(gameObject);
 
         if (fadeOut)
             yield return StartCoroutine(FadeOutRoutine());

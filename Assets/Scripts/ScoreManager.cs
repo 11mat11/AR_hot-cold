@@ -70,20 +70,15 @@ public class ScoreManager : MonoBehaviour
 
     public void RegisterObjectFound()
     {
-        // 1. Logika Gry (Zawsze dzia�a)
         objectsFoundInCurrentLevel++;
 
-        // 2. Zwi�kszamy licznik (Zawsze dzia�a)
         totalLifetimeOrbs++;
 
-        // 3. Zapisujemy lokalnie (Zawsze dzia�a)
         PlayerPrefs.SetInt(SAVE_KEY, (int)totalLifetimeOrbs);
         PlayerPrefs.Save();
 
-        // 4. Pr�bujemy wys�a� do Google (Dzia�a tylko jak zalogowany, jak nie - ignoruje b��d)
         PostScoreToGoogle();
 
-        // Reszta logiki poziom�w...
         if (objectsFoundInCurrentLevel >= ObjectsRequiredPerLevel)
         {
             score++;
@@ -96,8 +91,6 @@ public class ScoreManager : MonoBehaviour
 
     private void PostScoreToGoogle()
     {
-        // Ta linijka sprawia, �e gra nie wyrzuca b��d�w offline.
-        // Je�li nie zalogowany -> po prostu wychodzimy z funkcji.
         if (!Social.localUser.authenticated) return;
 
         Social.ReportScore(totalLifetimeOrbs, GPGSIds.leaderboard_collected_elemental_orbs, (bool success) => { });
