@@ -14,13 +14,21 @@ public class CreateObjectInRandomPlace : MonoBehaviour
     {
         int countToSpawn = ScoreManager.Instance.ObjectsRequiredPerLevel;
 
-        for (int i = 0; i < countToSpawn; i++)
+        HashSet<int> result = new HashSet<int>();
+
+        while (result.Count < countToSpawn)
         {
-            CreateSingleObject();
+            int r = Random.Range(0, elementPrefabs.Count);
+            result.Add(r);
+        }
+
+        foreach (var index in result)
+        {
+            CreateSingleObject(index);
         }
     }
 
-    private void CreateSingleObject()
+    private void CreateSingleObject(int elementIndex)
     {
         var planes = new List<ARPlane>();
         foreach (var p in planeManager.trackables) planes.Add(p);
@@ -29,10 +37,9 @@ public class CreateObjectInRandomPlace : MonoBehaviour
 
         int randomIndex = Random.Range(0, planes.Count);
         var randomPlane = planes[randomIndex];
-        int randomItemIndex = Random.Range(0, elementPrefabs.Count);
 
         Vector3 spawnPos = GetRandomPointOnPlane(randomPlane);
-        GameObject newObj = Instantiate(elementPrefabs[randomItemIndex], spawnPos, Quaternion.identity);
+        GameObject newObj = Instantiate(elementPrefabs[elementIndex], spawnPos, Quaternion.identity);
         currentObjects.Add(newObj);
     }
 

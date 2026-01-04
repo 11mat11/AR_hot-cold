@@ -11,7 +11,7 @@ public class ScoreManager : MonoBehaviour
 
     public int ObjectsRequiredPerLevel => objectsToFindInLevel;
 
-    private float[] multipliers = { 10f, 25f, 50f };
+    private int[] milestones = { 25, 50, 100, 250 };
 
     void Awake()
     {
@@ -41,11 +41,7 @@ public class ScoreManager : MonoBehaviour
 
     public int GetScoreNeededForLevel(int level)
     {
-        int cycle = (level - 1) / 3;
-
-        int index = (level - 1) % 3;
-
-        return (int)(multipliers[index] * Mathf.Pow(10, cycle));
+        return milestones[level - 1];
     }
 
     public void Reset()
