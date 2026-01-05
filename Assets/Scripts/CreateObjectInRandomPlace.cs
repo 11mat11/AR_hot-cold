@@ -9,9 +9,16 @@ public class CreateObjectInRandomPlace : MonoBehaviour
     public List<GameObject> elementPrefabs = new List<GameObject>();
     public float heightOffset = 1.0f;
     private List<GameObject> currentObjects = new List<GameObject>();
+    private Vector3 scanCenter = Vector3.zero;
+    private bool scanCenterCalculated = false;
 
     public void SpawnLevelObjects()
     {
+        if (!scanCenterCalculated)
+        {
+            CalculateScanCenter();
+        }
+
         int countToSpawn = ScoreManager.Instance.ObjectsRequiredPerLevel;
 
         HashSet<int> result = new HashSet<int>();
@@ -41,6 +48,8 @@ public class CreateObjectInRandomPlace : MonoBehaviour
         Vector3 spawnPos = GetRandomPointOnPlane(randomPlane);
         GameObject newObj = Instantiate(elementPrefabs[elementIndex], spawnPos, Quaternion.identity);
         currentObjects.Add(newObj);
+
+        CheckOneStepAheadAchievement(newObj);
     }
 
     Vector3 GetRandomPointOnPlane(ARPlane plane)
@@ -67,5 +76,59 @@ public class CreateObjectInRandomPlace : MonoBehaviour
     {
         if (currentObjects.Contains(obj))
             currentObjects.Remove(obj);
+    }
+
+    private void CalculateScanCenter()
+    {
+        var planes = new List<ARPlane>();
+        foreach (var p in planeManager.trackables) planes.Add(p);
+
+        if (planes.Count == 0)
+        {
+            scanCenter = Vector3.zero;
+            return;
+        }
+
+        Vector3 sum = Vector3.zero;
+        foreach (var plane in planes)
+        {
+            sum += plane.center;
+        }
+        scanCenter = sum / planes.Count;
+        scanCenterCalculated = true;
+    }
+
+    public Vector3 GetScanCenter()
+    {
+        if (!scanCenterCalculated)
+            CalculateScanCenter();
+        return scanCenter;
+    }
+
+    public float GetTotalScanArea()
+    {
+        var planes = new List<ARPlane>();
+        foreach (var p in planeManager.trackables) planes.Add(p);
+
+        float totalArea = 0f;
+        foreach (var plane in planes)
+        {
+            totalArea += plane.size.x * plane.size.y;
+        }
+        return totalArea;
+    }
+
+    public void ResetScanCenter()
+    {
+        scanCenterCalculated = false;
+    }
+
+    private void CheckOneStepAheadAchievement(GameObject spawnedObject)
+    {
+        ProximityDetector proximity = spawnedObject.GetComponent<ProximityDetector>();
+        if (proximity != null && proximity.IsPlayerWithinRange())
+        {
+            GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_one_step_ahead);
+        }
     }
 }

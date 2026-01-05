@@ -12,7 +12,7 @@ public class GPGSManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Wa¿ne: ¿eby manager nie znika³ przy zmianie scen
+            DontDestroyOnLoad(gameObject); // Waï¿½ne: ï¿½eby manager nie znikaï¿½ przy zmianie scen
         }
         else
         {
@@ -26,7 +26,7 @@ public class GPGSManager : MonoBehaviour
 
     void Start()
     {
-        // Próba cichego logowania na starcie
+        // Prï¿½ba cichego logowania na starcie
         SignIn();
     }
 
@@ -38,7 +38,7 @@ public class GPGSManager : MonoBehaviour
             {
                 Debug.Log("Zalogowano do Google Play Games: " + Social.localUser.userName);
 
-                // SUKCES: Mówimy ScoreManagerowi "Hej, mam internet, sprawdŸ czy w chmurze nie ma lepszego wyniku"
+                // SUKCES: Mï¿½wimy ScoreManagerowi "Hej, mam internet, sprawdï¿½ czy w chmurze nie ma lepszego wyniku"
                 if (ScoreManager.Instance != null)
                 {
                     ScoreManager.Instance.TrySyncScoreFromCloud();
@@ -46,8 +46,8 @@ public class GPGSManager : MonoBehaviour
             }
             else
             {
-                // PORA¯KA: Trudno, gra dzia³a dalej na lokalnych danych bez ¿adnych b³êdów
-                Debug.LogWarning("Nie uda³o siê zalogowaæ (brak internetu lub anulowano). Gramy offline.");
+                // PORAï¿½KA: Trudno, gra dziaï¿½a dalej na lokalnych danych bez ï¿½adnych bï¿½ï¿½dï¿½w
+                Debug.LogWarning("Nie udaï¿½o siï¿½ zalogowaï¿½ (brak internetu lub anulowano). Gramy offline.");
             }
         });
     }
@@ -60,7 +60,7 @@ public class GPGSManager : MonoBehaviour
         }
         else
         {
-            // Opcjonalnie: Tutaj mo¿esz wywo³aæ SignIn(), jeœli gracz klikn¹³ guzik a nie jest zalogowany
+            // Opcjonalnie: Tutaj moï¿½esz wywoï¿½aï¿½ SignIn(), jeï¿½li gracz kliknï¿½ï¿½ guzik a nie jest zalogowany
             SignIn();
         }
     }
@@ -70,6 +70,20 @@ public class GPGSManager : MonoBehaviour
         if (Social.localUser.authenticated)
         {
             Social.ShowLeaderboardUI();
+        }
+    }
+
+    public void UnlockAchievement(string achievementId)
+    {
+        if (Social.localUser.authenticated)
+        {
+            Social.ReportProgress(achievementId, 100.0f, (bool success) =>
+            {
+                if (success)
+                {
+                    Debug.Log("Achievement unlocked: " + achievementId);
+                }
+            });
         }
     }
 }

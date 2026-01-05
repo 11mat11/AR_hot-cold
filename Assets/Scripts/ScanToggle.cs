@@ -40,11 +40,14 @@ public class ScanToggle : MonoBehaviour
 
         if (!scanningEnabled && createObjectScript != null)
         {
+            CheckVeryEasyModeAchievement();
+            CheckExplorerAchievement();
             createObjectScript.SpawnLevelObjects();
         }
         else if (scanningEnabled && createObjectScript != null)
         {
             createObjectScript.ClearPreviousObjects();
+            createObjectScript.ResetScanCenter();
             ScoreManager.Instance.Reset();
         }
     }
@@ -65,5 +68,25 @@ public class ScanToggle : MonoBehaviour
     public bool IsScanning()
     {
         return scanningEnabled;
+    }
+
+    private void CheckVeryEasyModeAchievement()
+    {
+        float totalArea = createObjectScript.GetTotalScanArea();
+        if (totalArea > 0 && totalArea < 2.0f)
+        {
+            GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_very_easy_mode);
+        }
+    }
+
+    private void CheckExplorerAchievement()
+    {
+        if (createObjectScript == null) return;
+
+        float totalArea = createObjectScript.GetTotalScanArea();
+        if (totalArea >= 50.0f)
+        {
+            GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_explorer);
+        }
     }
 }

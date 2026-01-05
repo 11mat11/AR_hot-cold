@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9062034455061527615}
   m_Layer: 0
   m_Name: AirElement
-  m_TagString: Untagged
+  m_TagString: ElementalOrb
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

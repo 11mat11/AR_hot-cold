@@ -16,10 +16,12 @@ public class ProximityDetector : MonoBehaviour
     private Renderer[] renderers;
     private bool triggered = false;
     private CreateObjectInRandomPlace creator;
+    private float spawnTime;
 
     void Start()
     {
         renderers = GetComponentsInChildren<Renderer>();
+        spawnTime = Time.time;
     }
 
     void Awake()
@@ -61,6 +63,9 @@ public class ProximityDetector : MonoBehaviour
 
         yield return new WaitForSeconds(destructionDelay);
 
+        CheckQuickBillAchievement();
+        CheckCenterOfTheFieldAchievement();
+
         if (ScoreManager.Instance != null)
             ScoreManager.Instance.RegisterObjectFound();
 
@@ -99,5 +104,33 @@ public class ProximityDetector : MonoBehaviour
     {
         foreach (var r in renderers)
             r.enabled = visible;
+    }
+
+    public bool IsPlayerWithinRange()
+    {
+        if (Camera.main == null) return false;
+        float dist = Vector3.Distance(Camera.main.transform.position, transform.position);
+        return dist < triggerDistance_visible;
+    }
+
+    private void CheckQuickBillAchievement()
+    {
+        float timeSinceSpawn = Time.time - spawnTime;
+        if (timeSinceSpawn < 5f)
+        {
+            GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_quick_bill);
+        }
+    }
+
+    private void CheckCenterOfTheFieldAchievement()
+    {
+        if (creator == null) return;
+
+        Vector3 scanCenter = creator.GetScanCenter();
+        float distanceToCenter = Vector3.Distance(transform.position, scanCenter);
+        if (distanceToCenter < 1.5f)
+        {
+            GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_center_of_the_field);
+        }
     }
 }
