@@ -24,8 +24,26 @@
 
 public static class GPGSIds
 {
+        public const string achievement_silence_seeker = "CgkIwv7R3YsTEAIQEw"; // <GPGSID>
+        public const string leaderboard_largest_scanned_area = "CgkIwv7R3YsTEAIQBA"; // <GPGSID>
+        public const string achievement_very_easy_mode = "CgkIwv7R3YsTEAIQDQ"; // <GPGSID>
+        public const string achievement_edge_case = "CgkIwv7R3YsTEAIQEA"; // <GPGSID>
+        public const string achievement_explorer = "CgkIwv7R3YsTEAIQCg"; // <GPGSID>
+        public const string achievement_center_of_the_field = "CgkIwv7R3YsTEAIQEg"; // <GPGSID>
+        public const string achievement_beginner = "CgkIwv7R3YsTEAIQBQ"; // <GPGSID>
         public const string leaderboard_collected_elemental_orbs = "CgkIwv7R3YsTEAIQAQ"; // <GPGSID>
-        public const string achievement_collect_elemental_orbs = "CgkIwv7R3YsTEAIQAg"; // <GPGSID>
+        public const string achievement_veteran = "CgkIwv7R3YsTEAIQBg"; // <GPGSID>
+        public const string achievement_midnight_explorer = "CgkIwv7R3YsTEAIQDw"; // <GPGSID>
+        public const string achievement_sound_listener = "CgkIwv7R3YsTEAIQDA"; // <GPGSID>
+        public const string achievement_master_of_five_elements = "CgkIwv7R3YsTEAIQCQ"; // <GPGSID>
+        public const string achievement_quick_bill = "CgkIwv7R3YsTEAIQAg"; // <GPGSID>
+        public const string achievement_better_late_than_never = "CgkIwv7R3YsTEAIQCw"; // <GPGSID>
+        public const string achievement_master = "CgkIwv7R3YsTEAIQBw"; // <GPGSID>
+        public const string achievement_marathoner = "CgkIwv7R3YsTEAIQCA"; // <GPGSID>
+        public const string achievement_absolute_silence = "CgkIwv7R3YsTEAIQFA"; // <GPGSID>
+        public const string achievement_quick_catch = "CgkIwv7R3YsTEAIQDg"; // <GPGSID>
+        public const string leaderboard_best_score = "CgkIwv7R3YsTEAIQAw"; // <GPGSID>
+        public const string achievement_one_step_ahead = "CgkIwv7R3YsTEAIQEQ"; // <GPGSID>
 
 }
 
