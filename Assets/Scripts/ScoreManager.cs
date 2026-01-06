@@ -9,7 +9,8 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
     public TMP_Text scoreText;
-
+    private long bestScore = 0;
+    private const string SAVE_KEY_BEST_SCORE = "GPGS_BestScore";
     private int score = 0;
     private int objectsFoundInCurrentLevel = 0;
     private int objectsToFindInLevel = 1;
@@ -40,7 +41,8 @@ public class ScoreManager : MonoBehaviour
         Instance = this;
 
         totalLifetimeOrbs = PlayerPrefs.GetInt(SAVE_KEY, 0);
-        Debug.Log("Tryb Offline/Start: Wczytano lokalnie: " + totalLifetimeOrbs);
+        bestScore = PlayerPrefs.GetInt(SAVE_KEY_BEST_SCORE, 0);
+        Debug.Log($"Start Offline: Lifetime={totalLifetimeOrbs}, BestScore={bestScore}");
 
         UpdateUI();
     }
@@ -78,8 +80,29 @@ public class ScoreManager : MonoBehaviour
                      }
                      else if (totalLifetimeOrbs > cloudScore)
                      {
-                         PostScoreToGoogle();
+                         Social.ReportScore(totalLifetimeOrbs, GPGSIds.leaderboard_collected_elemental_orbs, (bool s) => { });
                          Debug.Log("Wys�ano zaleg�y wynik lokalny do chmury.");
+                     }
+                 }
+             });
+        PlayGamesPlatform.Instance.LoadScores(
+             GPGSIds.leaderboard_best_score,
+             LeaderboardStart.PlayerCentered,
+             1,
+             LeaderboardCollection.Public,
+             LeaderboardTimeSpan.AllTime,
+             (LeaderboardScoreData data) =>
+             {
+                 if (data.Valid && data.PlayerScore != null)
+                 {
+                     long cloudBest = data.PlayerScore.value;
+
+                     if (cloudBest > bestScore)
+                     {
+                         bestScore = cloudBest;
+                         PlayerPrefs.SetInt(SAVE_KEY_BEST_SCORE, (int)bestScore);
+                         PlayerPrefs.Save();
+                         Debug.Log("Zaktualizowano Best Score z chmury: " + bestScore);
                      }
                  }
              });
@@ -97,7 +120,7 @@ public class ScoreManager : MonoBehaviour
         PlayerPrefs.SetInt(SAVE_KEY, (int)totalLifetimeOrbs);
         PlayerPrefs.Save();
 
-        PostScoreToGoogle();
+        PostScoreToGoogle(totalLifetimeOrbs, GPGSIds.leaderboard_collected_elemental_orbs);
 
         timeSearchingForOrb = 0f;
 
@@ -109,10 +132,21 @@ public class ScoreManager : MonoBehaviour
         {
             score++;
             objectsFoundInCurrentLevel = 0;
+            if (score > bestScore)
+            {
+                bestScore = score;
+
+                PlayerPrefs.SetInt(SAVE_KEY_BEST_SCORE, (int)bestScore);
+                PlayerPrefs.Save();
+
+                Debug.Log($"Nowy rekord! Wysyłam {bestScore} do tabeli Best Score.");
+                PostScoreToGoogle(bestScore, GPGSIds.leaderboard_best_score);
+            }
             if (score % GetScoreNeededForLevel(objectsToFindInLevel) == 0) objectsToFindInLevel++;
             FindFirstObjectByType<CreateObjectInRandomPlace>()?.SpawnLevelObjects();
 
             CheckMarathonerAchievement();
+           
         }
         UpdateUI();
     }
@@ -133,7 +167,7 @@ public class ScoreManager : MonoBehaviour
     private void MidnightExplorerCheck()
     {
         int hour = System.DateTime.Now.Hour;
-        if (hour >= 0 && hour < 4)
+        if (hour >= 0 && hour < 1)
             GPGSManager.Instance.UnlockAchievement(GPGSIds.achievement_midnight_explorer);
     }
 
@@ -223,16 +257,19 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    private void PostScoreToGoogle()
+    private void PostScoreToGoogle(long scoreVal, string leaderboardId)
     {
         if (!Social.localUser.authenticated) return;
-
-        Social.ReportScore(totalLifetimeOrbs, GPGSIds.leaderboard_collected_elemental_orbs, (bool success) => { });
+        Social.ReportScore(scoreVal, leaderboardId, (bool success) => { });
     }
 
     public int GetScoreNeededForLevel(int level)
     {
-        return milestones[level - 1];
+        if (level - 1 < milestones.Length)
+        {
+            return milestones[level - 1];
+        }
+        return milestones[milestones.Length - 1];
     }
 
     public void Reset()
@@ -248,19 +285,19 @@ public class ScoreManager : MonoBehaviour
     {
         if (GPGSManager.Instance == null) return;
 
-        if (totalLifetimeOrbs >= 10)
-            GPGSManager.Instance.UnlockAchievement(GPGSIds.achievement_beginner);
+        // Beginner (wymaga 10)
+        GPGSManager.Instance.IncrementAchievement(GPGSIds.achievement_beginner, 1);
 
-        if (totalLifetimeOrbs >= 100)
-            GPGSManager.Instance.UnlockAchievement(GPGSIds.achievement_veteran);
+        // Veteran (wymaga 100)
+        GPGSManager.Instance.IncrementAchievement(GPGSIds.achievement_veteran, 1);
 
-        if (totalLifetimeOrbs >= 1000)
-            GPGSManager.Instance.UnlockAchievement(GPGSIds.achievement_master);
+        // Master (wymaga 1000)
+        GPGSManager.Instance.IncrementAchievement(GPGSIds.achievement_master, 1);
     }
 
     private void CheckMarathonerAchievement()
     {
-        if (score >= 75)
+        if (score >= 100)
         {
             GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_marathoner);
         }

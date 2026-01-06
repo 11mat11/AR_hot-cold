@@ -86,4 +86,18 @@ public class GPGSManager : MonoBehaviour
             });
         }
     }
+
+    public void IncrementAchievement(string achievementId, int steps)
+    {
+        if (Social.localUser.authenticated)
+        {
+            PlayGamesPlatform.Instance.IncrementAchievement(achievementId, steps, (bool success) =>
+            {
+                if (success)
+                {
+                     Debug.Log("Dodano postęp do osiągnięcia: " + achievementId);
+                }
+            });
+        }
+    }
 }

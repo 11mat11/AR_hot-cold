@@ -361,6 +361,7 @@ MonoBehaviour:
   - {fileID: 6324602663943922825, guid: f69fcdfc039375447a172a68bb484e71, type: 3}
   - {fileID: 6324602663943922825, guid: fb933bcb4dfbeda40a8be1d9d24508c3, type: 3}
   - {fileID: 6324602663943922825, guid: 98139df0420923141adbd39224579ad1, type: 3}
+  - {fileID: 6324602663943922825, guid: 5fc24f5e2851371469f37bd2b85245a3, type: 3}
   heightOffset: 1
 --- !u!1 &173779100
 GameObject:

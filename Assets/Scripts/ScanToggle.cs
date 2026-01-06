@@ -40,8 +40,10 @@ public class ScanToggle : MonoBehaviour
 
         if (!scanningEnabled && createObjectScript != null)
         {
-            CheckVeryEasyModeAchievement();
-            CheckExplorerAchievement();
+            float currentTotalArea = createObjectScript.GetTotalScanArea();
+            CheckVeryEasyModeAchievement(currentTotalArea);
+            CheckExplorerAchievement(currentTotalArea);
+            SubmitAreaToLeaderboard(currentTotalArea);
             createObjectScript.SpawnLevelObjects();
         }
         else if (scanningEnabled && createObjectScript != null)
@@ -70,23 +72,36 @@ public class ScanToggle : MonoBehaviour
         return scanningEnabled;
     }
 
-    private void CheckVeryEasyModeAchievement()
+    private void CheckVeryEasyModeAchievement(float totalArea)
     {
-        float totalArea = createObjectScript.GetTotalScanArea();
         if (totalArea > 0 && totalArea < 2.0f)
         {
             GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_very_easy_mode);
         }
     }
 
-    private void CheckExplorerAchievement()
+    private void CheckExplorerAchievement(float totalArea)
     {
         if (createObjectScript == null) return;
 
-        float totalArea = createObjectScript.GetTotalScanArea();
         if (totalArea >= 50.0f)
         {
             GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_explorer);
+        }
+    }
+    private void SubmitAreaToLeaderboard(float areaInSquareMeters)
+    {
+        if (Social.localUser.authenticated)
+        {
+            long scoreToSend = (long)(areaInSquareMeters * 100.0f);
+
+            Social.ReportScore(scoreToSend, GPGSIds.leaderboard_largest_scanned_area, (bool success) =>
+            {
+                if (success)
+                {
+                    Debug.Log($"Wys³ano wynik obszaru: {areaInSquareMeters} m2 (jako wartoœæ {scoreToSend})");
+                }
+            });
         }
     }
 }
