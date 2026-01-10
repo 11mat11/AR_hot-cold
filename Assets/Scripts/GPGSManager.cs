@@ -1,6 +1,8 @@
 using UnityEngine;
+#if UNITY_ANDROID
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
+#endif
 using UnityEngine.SocialPlatforms;
 
 public class GPGSManager : MonoBehaviour
@@ -12,7 +14,7 @@ public class GPGSManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Wa�ne: �eby manager nie znika� przy zmianie scen
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -20,25 +22,24 @@ public class GPGSManager : MonoBehaviour
             return;
         }
 
-        // Aktywacja wtyczki
+#if UNITY_ANDROID
         PlayGamesPlatform.Activate();
+#endif
     }
 
     void Start()
     {
-        // Pr�ba cichego logowania na starcie
         SignIn();
     }
 
     public void SignIn()
     {
+#if UNITY_ANDROID
         Social.localUser.Authenticate((bool success) =>
         {
             if (success)
             {
                 Debug.Log("Zalogowano do Google Play Games: " + Social.localUser.userName);
-
-                // SUKCES: M�wimy ScoreManagerowi "Hej, mam internet, sprawd� czy w chmurze nie ma lepszego wyniku"
                 if (ScoreManager.Instance != null)
                 {
                     ScoreManager.Instance.TrySyncScoreFromCloud();
@@ -46,35 +47,39 @@ public class GPGSManager : MonoBehaviour
             }
             else
             {
-                // PORA�KA: Trudno, gra dzia�a dalej na lokalnych danych bez �adnych b��d�w
-                Debug.LogWarning("Nie uda�o si� zalogowa� (brak internetu lub anulowano). Gramy offline.");
+                Debug.LogWarning("Nie udało się zalogować (brak internetu lub anulowano). Gramy offline.");
             }
         });
+#endif
     }
 
     public void ShowAchievementsUI()
     {
+#if UNITY_ANDROID
         if (Social.localUser.authenticated)
         {
             Social.ShowAchievementsUI();
         }
         else
         {
-            // Opcjonalnie: Tutaj mo�esz wywo�a� SignIn(), je�li gracz klikn�� guzik a nie jest zalogowany
             SignIn();
         }
+#endif
     }
 
     public void ShowLeaderboardsUI()
     {
+#if UNITY_ANDROID
         if (Social.localUser.authenticated)
         {
             Social.ShowLeaderboardUI();
         }
+#endif
     }
 
     public void UnlockAchievement(string achievementId)
     {
+#if UNITY_ANDROID
         if (Social.localUser.authenticated)
         {
             Social.ReportProgress(achievementId, 100.0f, (bool success) =>
@@ -85,10 +90,12 @@ public class GPGSManager : MonoBehaviour
                 }
             });
         }
+#endif
     }
 
     public void IncrementAchievement(string achievementId, int steps)
     {
+#if UNITY_ANDROID
         if (Social.localUser.authenticated)
         {
             PlayGamesPlatform.Instance.IncrementAchievement(achievementId, steps, (bool success) =>
@@ -99,5 +106,6 @@ public class GPGSManager : MonoBehaviour
                 }
             });
         }
+#endif
     }
 }

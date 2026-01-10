@@ -1,8 +1,11 @@
 using TMPro;
 using UnityEngine;
+#if UNITY_ANDROID
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
+#endif
 using UnityEngine.SocialPlatforms;
+using System.Collections;
 using System.Collections.Generic;
 
 public class ScoreManager : MonoBehaviour
@@ -21,6 +24,15 @@ public class ScoreManager : MonoBehaviour
     // For achievements and leaderboards
     private long totalLifetimeOrbs = 0;
     private const string SAVE_KEY = "GPGS_LifetimeObjects";
+
+    // Score animation settings
+    [Header("Score Animation")]
+    [SerializeField] private float punchScale = 1.5f;
+    [SerializeField] private float animationDuration = 0.4f;
+    [SerializeField] private Color flashColor = new Color(1f, 0.85f, 0.2f, 1f);
+    private Vector3 originalScale;
+    private Color originalColor;
+    private Coroutine currentAnimation;
 
     private float lastCatchTime;
     private int quickCatchCounter = 0;
@@ -44,7 +56,13 @@ public class ScoreManager : MonoBehaviour
         bestScore = PlayerPrefs.GetInt(SAVE_KEY_BEST_SCORE, 0);
         Debug.Log($"Start Offline: Lifetime={totalLifetimeOrbs}, BestScore={bestScore}");
 
-        UpdateUI();
+        if (scoreText != null)
+        {
+            originalScale = scoreText.transform.localScale;
+            originalColor = scoreText.color;
+        }
+
+        UpdateUI(false);
     }
 
     void Update()
@@ -56,6 +74,7 @@ public class ScoreManager : MonoBehaviour
 
     public void TrySyncScoreFromCloud()
     {
+#if UNITY_ANDROID
         if (!Social.localUser.authenticated) return;
 
         PlayGamesPlatform.Instance.LoadScores(
@@ -81,7 +100,7 @@ public class ScoreManager : MonoBehaviour
                      else if (totalLifetimeOrbs > cloudScore)
                      {
                          Social.ReportScore(totalLifetimeOrbs, GPGSIds.leaderboard_collected_elemental_orbs, (bool s) => { });
-                         Debug.Log("Wys�ano zaleg�y wynik lokalny do chmury.");
+                         Debug.Log("Wysłano zaległy wynik lokalny do chmury.");
                      }
                  }
              });
@@ -106,6 +125,7 @@ public class ScoreManager : MonoBehaviour
                      }
                  }
              });
+#endif
     }
 
     public void RegisterObjectFound()
@@ -259,8 +279,10 @@ public class ScoreManager : MonoBehaviour
 
     private void PostScoreToGoogle(long scoreVal, string leaderboardId)
     {
+#if UNITY_ANDROID
         if (!Social.localUser.authenticated) return;
         Social.ReportScore(scoreVal, leaderboardId, (bool success) => { });
+#endif
     }
 
     public int GetScoreNeededForLevel(int level)
@@ -278,7 +300,7 @@ public class ScoreManager : MonoBehaviour
         objectsFoundInCurrentLevel = 0;
         objectsToFindInLevel = 1;
         timeSearchingForOrb = 0f;
-        UpdateUI();
+        UpdateUI(false);
     }
 
     private void CheckMilestoneAchievements()
@@ -313,8 +335,96 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    private void UpdateUI()
+    private void UpdateUI(bool animate = true)
     {
-        if (scoreText != null) scoreText.text = score.ToString();
+        if (scoreText == null) return;
+
+        scoreText.text = score.ToString();
+
+        if (animate && score > 0)
+        {
+            PlayScoreAnimation();
+        }
+    }
+
+    private void PlayScoreAnimation()
+    {
+        if (currentAnimation != null)
+        {
+            StopCoroutine(currentAnimation);
+            scoreText.transform.localScale = originalScale;
+            scoreText.color = originalColor;
+        }
+        currentAnimation = StartCoroutine(ScoreAnimationCoroutine());
+    }
+
+    private IEnumerator ScoreAnimationCoroutine()
+    {
+        float elapsed = 0f;
+        float halfDuration = animationDuration * 0.4f;
+
+        // Phase 1: Punch up (scale up + color flash)
+        while (elapsed < halfDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / halfDuration;
+
+            // Elastic ease out for punchy feel
+            float scale = Mathf.LerpUnclamped(1f, punchScale, EaseOutBack(t));
+            scoreText.transform.localScale = originalScale * scale;
+
+            // Flash to highlight color
+            scoreText.color = Color.Lerp(originalColor, flashColor, t);
+
+            yield return null;
+        }
+
+        // Phase 2: Bounce back (scale down + color restore)
+        elapsed = 0f;
+        float remainingDuration = animationDuration - halfDuration;
+
+        while (elapsed < remainingDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / remainingDuration;
+
+            // Elastic bounce back
+            float scale = Mathf.LerpUnclamped(punchScale, 1f, EaseOutBounce(t));
+            scoreText.transform.localScale = originalScale * scale;
+
+            // Fade back to original color
+            scoreText.color = Color.Lerp(flashColor, originalColor, EaseOutQuad(t));
+
+            yield return null;
+        }
+
+        // Ensure final state
+        scoreText.transform.localScale = originalScale;
+        scoreText.color = originalColor;
+        currentAnimation = null;
+    }
+
+    private float EaseOutBack(float t)
+    {
+        float c1 = 1.70158f;
+        float c3 = c1 + 1f;
+        return 1f + c3 * Mathf.Pow(t - 1f, 3f) + c1 * Mathf.Pow(t - 1f, 2f);
+    }
+
+    private float EaseOutBounce(float t)
+    {
+        if (t < 1f / 2.75f)
+            return 7.5625f * t * t;
+        else if (t < 2f / 2.75f)
+            return 7.5625f * (t -= 1.5f / 2.75f) * t + 0.75f;
+        else if (t < 2.5f / 2.75f)
+            return 7.5625f * (t -= 2.25f / 2.75f) * t + 0.9375f;
+        else
+            return 7.5625f * (t -= 2.625f / 2.75f) * t + 0.984375f;
+    }
+
+    private float EaseOutQuad(float t)
+    {
+        return 1f - (1f - t) * (1f - t);
     }
 }

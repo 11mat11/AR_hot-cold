@@ -91,6 +91,7 @@ public class ScanToggle : MonoBehaviour
     }
     private void SubmitAreaToLeaderboard(float areaInSquareMeters)
     {
+#if UNITY_ANDROID
         if (Social.localUser.authenticated)
         {
             long scoreToSend = (long)(areaInSquareMeters * 100.0f);
@@ -99,9 +100,10 @@ public class ScanToggle : MonoBehaviour
             {
                 if (success)
                 {
-                    Debug.Log($"Wys³ano wynik obszaru: {areaInSquareMeters} m2 (jako wartoœæ {scoreToSend})");
+                    Debug.Log($"WysÅ‚ano wynik obszaru: {areaInSquareMeters} m2 (jako wartoÅ›Ä‡ {scoreToSend})");
                 }
             });
         }
+#endif
     }
 }
