@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Collections;
+using UnityEngine.Events;
 
 public class ScanToggle : MonoBehaviour
 {
@@ -66,9 +67,30 @@ public class ScanToggle : MonoBehaviour
             buttonRectTransform = buttonIcon.transform.parent.GetComponent<RectTransform>();
         }
 
+        // Don't start scanning until safety warning is accepted
+        StartCoroutine(WaitForSafetyWarningAndStart());
+    }
+
+    private IEnumerator WaitForSafetyWarningAndStart()
+    {
+        // Initially disable plane detection until warning is accepted
+        if (planeManager != null)
+        {
+            planeManager.requestedDetectionMode = PlaneDetectionMode.None;
+        }
+
+        // Wait for safety warning to be accepted
+        yield return new WaitUntil(() => SafetyWarningManager.WarningAccepted);
+
+        // Now enable scanning
+        if (planeManager != null && scanningEnabled)
+        {
+            planeManager.requestedDetectionMode = PlaneDetectionMode.Horizontal;
+        }
+
         UpdateButtonVisuals();
 
-        // Start pulsing immediately if scanning is enabled
+        // Start pulsing if scanning is enabled
         if (scanningEnabled)
         {
             StartPulsing();

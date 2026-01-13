@@ -310,6 +310,8 @@ namespace UnityEngine.XR.Templates.AR
         IEnumerator Start()
         {
             yield return null;
+            // Wait for safety warning to be accepted before starting coaching
+            yield return new WaitUntil(() => SafetyWarningManager.WarningAccepted);
             StartCoaching();
         }
     }
