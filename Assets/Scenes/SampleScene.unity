@@ -338,11 +338,25 @@ MonoBehaviour:
   planeManager: {fileID: 151853166}
   buttonText: {fileID: 1402374329}
   buttonIcon: {fileID: 1418760533}
+  buttonRectTransform: {fileID: 0}
   scanningIcon: {fileID: 21300000, guid: bde57b7e76eb5674796065d740264cfa, type: 3}
   stoppedIcon: {fileID: 21300000, guid: 3bef8e6773c10dd49b96ad1d4c5e0eb5, type: 3}
   scanningText: Scanning
   stoppedText: Stopped
+  fadeDuration: 0.2
+  pulseSpeed: 2
+  pulseMinScale: 0.85
+  pulseMaxScale: 1.15
+  transitionDuration: 0.4
+  transitionDelay: 0.3
+  scanningAnchor: {x: 0.5, y: 0}
+  scanningPosition: {x: 0, y: 100}
+  scanningSize: {x: 220, y: 60}
+  gameplayAnchor: {x: 1, y: 1}
+  gameplayPosition: {x: -100, y: -200}
+  gameplaySize: {x: 50, y: 50}
   createObjectScript: {fileID: 151853176}
+  backgroundSpawnerScript: {fileID: 151853181}
 --- !u!114 &151853176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,6 +377,29 @@ MonoBehaviour:
   - {fileID: 6324602663943922825, guid: 98139df0420923141adbd39224579ad1, type: 3}
   - {fileID: 6324602663943922825, guid: 5fc24f5e2851371469f37bd2b85245a3, type: 3}
   heightOffset: 1
+--- !u!114 &151853181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9741589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 124cb649343beb64b83838f096cb873f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundObjectSpawner
+  planeManager: {fileID: 151853166}
+  backgroundPrefabs:
+  - {fileID: 8275239744423275130, guid: 6c599f416f36e55468310e19b5b4a65e, type: 3}
+  objectCount: 15
+  minDistanceBetweenObjects: 1
+  minDistanceFromEdge: 0.3
+  heightOffset: 0.01
+  randomRotation: 0
+  randomScale: 1
+  minScale: 0.5
+  maxScale: 1.5
 --- !u!1 &173779100
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,6 +831,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2512387470528047719, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
       insertIndex: -1
       addedObject: {fileID: 151853176}
+    - targetCorrespondingSourceObject: {fileID: 2512387470528047719, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 151853181}
   m_SourcePrefab: {fileID: 100100000, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
 --- !u!114 &331264286 stripped
 MonoBehaviour:
@@ -975,7 +1015,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument:
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &377192127
@@ -988,7 +1028,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.12, g: 0.12, b: 0.12, a: 0.85}
@@ -2934,6 +2974,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
   scoreText: {fileID: 1517432235}
+  punchScale: 1.5
+  animationDuration: 0.4
+  flashColor: {r: 1, g: 0.85, b: 0.2, a: 1}
 --- !u!4 &1180434883
 Transform:
   m_ObjectHideFlags: 0
@@ -3832,7 +3875,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

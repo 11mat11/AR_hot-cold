@@ -46,6 +46,7 @@ public class ScanToggle : MonoBehaviour
     [SerializeField] private Vector2 gameplaySize = new Vector2(50f, 50f);
 
     public CreateObjectInRandomPlace createObjectScript;
+    public BackgroundObjectSpawner backgroundSpawnerScript;
 
     private Coroutine fadeCoroutine;
     private Coroutine pulseCoroutine;
@@ -133,12 +134,22 @@ public class ScanToggle : MonoBehaviour
             CheckExplorerAchievement(currentTotalArea);
             SubmitAreaToLeaderboard(currentTotalArea);
             createObjectScript.SpawnLevelObjects();
+
+            if (backgroundSpawnerScript != null)
+            {
+                backgroundSpawnerScript.SpawnBackgroundObjects();
+            }
         }
         else if (scanningEnabled && createObjectScript != null)
         {
             createObjectScript.ClearPreviousObjects();
             createObjectScript.ResetScanCenter();
             ScoreManager.Instance.Reset();
+
+            if (backgroundSpawnerScript != null)
+            {
+                backgroundSpawnerScript.ClearPreviousObjects();
+            }
         }
     }
 
