@@ -27,9 +27,6 @@ public class ScanToggle : MonoBehaviour
 
     [Header("Animation Settings")]
     [SerializeField] private float fadeDuration = 0.2f;
-    [SerializeField] private float pulseSpeed = 2f;
-    [SerializeField] private float pulseMinScale = 0.85f;
-    [SerializeField] private float pulseMaxScale = 1.15f;
 
     [Header("Button Position Settings")]
     [SerializeField] private float transitionDuration = 0.4f;
@@ -49,19 +46,12 @@ public class ScanToggle : MonoBehaviour
     public BackgroundObjectSpawner backgroundSpawnerScript;
 
     private Coroutine fadeCoroutine;
-    private Coroutine pulseCoroutine;
     private Coroutine transitionCoroutine;
-    private Vector3 iconOriginalScale;
     private bool isFirstUpdate = true;
     private bool isInGameplayPosition = false;
 
     void Start()
     {
-        if (buttonIcon != null)
-        {
-            iconOriginalScale = buttonIcon.transform.localScale;
-        }
-
         // Get RectTransform from button icon's parent (the button itself)
         if (buttonRectTransform == null && buttonIcon != null)
         {
@@ -90,12 +80,6 @@ public class ScanToggle : MonoBehaviour
         }
 
         UpdateButtonVisuals();
-
-        // Start pulsing if scanning is enabled
-        if (scanningEnabled)
-        {
-            StartPulsing();
-        }
     }
 
     void OnDisable()
@@ -105,11 +89,6 @@ public class ScanToggle : MonoBehaviour
         {
             StopCoroutine(fadeCoroutine);
             fadeCoroutine = null;
-        }
-        if (pulseCoroutine != null)
-        {
-            StopCoroutine(pulseCoroutine);
-            pulseCoroutine = null;
         }
         if (transitionCoroutine != null)
         {
@@ -172,16 +151,14 @@ public class ScanToggle : MonoBehaviour
             fadeCoroutine = StartCoroutine(FadeTransition(newText, newSprite));
         }
 
-        // Handle pulsing and position
+        // Handle position transition
         if (scanningEnabled)
         {
-            StartPulsing();
             // Move to scanning position (bottom center, big)
             MoveToScanningPosition();
         }
         else
         {
-            StopPulsing();
             // Move to gameplay position after delay (top corner, small)
             ScheduleGameplayTransition();
         }
@@ -330,47 +307,6 @@ public class ScanToggle : MonoBehaviour
             buttonIcon.color = new Color(iconStartColor.r, iconStartColor.g, iconStartColor.b, 1f);
 
         fadeCoroutine = null;
-    }
-
-    private void StartPulsing()
-    {
-        if (pulseCoroutine != null) return; // Already pulsing
-        if (buttonIcon == null) return;
-
-        pulseCoroutine = StartCoroutine(PulseAnimation());
-    }
-
-    private void StopPulsing()
-    {
-        if (pulseCoroutine != null)
-        {
-            StopCoroutine(pulseCoroutine);
-            pulseCoroutine = null;
-        }
-
-        // Reset to original scale
-        if (buttonIcon != null)
-        {
-            buttonIcon.transform.localScale = iconOriginalScale;
-        }
-    }
-
-    private IEnumerator PulseAnimation()
-    {
-        float time = 0f;
-
-        while (true)
-        {
-            time += Time.deltaTime * pulseSpeed;
-
-            // Smooth sine wave pulse
-            float t = (Mathf.Sin(time) + 1f) / 2f; // 0 to 1
-            float scale = Mathf.Lerp(pulseMinScale, pulseMaxScale, t);
-
-            buttonIcon.transform.localScale = iconOriginalScale * scale;
-
-            yield return null;
-        }
     }
 
     public bool IsScanning()

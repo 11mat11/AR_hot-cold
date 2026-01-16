@@ -339,14 +339,11 @@ MonoBehaviour:
   buttonText: {fileID: 1402374329}
   buttonIcon: {fileID: 1418760533}
   buttonRectTransform: {fileID: 0}
-  scanningIcon: {fileID: 21300000, guid: bde57b7e76eb5674796065d740264cfa, type: 3}
-  stoppedIcon: {fileID: 21300000, guid: 3bef8e6773c10dd49b96ad1d4c5e0eb5, type: 3}
+  scanningIcon: {fileID: 21300000, guid: 7eca3b58e348e3d46ab0ec1136fc24a5, type: 3}
+  stoppedIcon: {fileID: 21300000, guid: de70c15148a37ff45ac75cc1d38c52be, type: 3}
   scanningText: Scanning
   stoppedText: Stopped
   fadeDuration: 0.2
-  pulseSpeed: 2
-  pulseMinScale: 0.85
-  pulseMaxScale: 1.15
   transitionDuration: 0.4
   transitionDelay: 0.3
   scanningAnchor: {x: 0.5, y: 0}
@@ -1069,7 +1066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
   m_Padding:
-    m_Left: 12
+    m_Left: -17
     m_Right: 16
     m_Top: 0
     m_Bottom: 0
@@ -3728,7 +3725,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Scanning...
+  m_text: Scanning
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3843,7 +3840,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 24, y: 24}
+  m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1418760532
 MonoBehaviour:
@@ -3858,8 +3855,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
   m_IgnoreLayout: 0
-  m_MinWidth: 24
-  m_MinHeight: 24
+  m_MinWidth: 64
+  m_MinHeight: 64
   m_PreferredWidth: -1
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
@@ -3885,7 +3882,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bde57b7e76eb5674796065d740264cfa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7eca3b58e348e3d46ab0ec1136fc24a5, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
