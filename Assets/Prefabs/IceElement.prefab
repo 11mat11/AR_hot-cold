@@ -4882,7 +4882,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: b82edb7874f6f814bb439c769c7cacf3, type: 3}
+  m_Resource: {fileID: 8300000, guid: 7a18209ba6976f849aef78441dc7a7eb, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -4980,7 +4980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88af477774b924f49b980152df6ef7fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpatialSound
-  clip: {fileID: 8300000, guid: b82edb7874f6f814bb439c769c7cacf3, type: 3}
+  clip: {fileID: 8300000, guid: 7a18209ba6976f849aef78441dc7a7eb, type: 3}
   intervalSeconds: 2
   volume: 0.15
   fullVolumeDistance: 0.5
