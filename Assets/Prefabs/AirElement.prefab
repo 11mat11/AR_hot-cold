@@ -167,7 +167,7 @@ MonoBehaviour:
   destructionMethodName: Break
   destructionDelay: 1
   fadeOut: 1
-  fadeDuration: 3
+  fadeDuration: 4
 --- !u!1 &8688784784478687595
 GameObject:
   m_ObjectHideFlags: 0

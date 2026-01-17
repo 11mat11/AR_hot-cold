@@ -341,7 +341,7 @@ MonoBehaviour:
   buttonRectTransform: {fileID: 0}
   scanningIcon: {fileID: 21300000, guid: 7eca3b58e348e3d46ab0ec1136fc24a5, type: 3}
   stoppedIcon: {fileID: 21300000, guid: 71877645eaef306418312b1ce101c8eb, type: 3}
-  scanningText: Scanning
+  scanningText: Stop Scanning
   stoppedText: Stopped
   fadeDuration: 0.2
   transitionDuration: 0.4
@@ -3725,7 +3725,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Scanning
+  m_text: Stop Scanning
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

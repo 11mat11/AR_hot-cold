@@ -22,7 +22,7 @@ public class ScanToggle : MonoBehaviour
     public Sprite stoppedIcon;
 
     [Header("Button Text")]
-    public string scanningText = "Scanning";
+    public string scanningText = "Stop Scanning";
     public string stoppedText = "Stopped";
 
     [Header("Animation Settings")]
