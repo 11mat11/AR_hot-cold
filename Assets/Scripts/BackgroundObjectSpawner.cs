@@ -12,23 +12,19 @@ public class BackgroundObjectSpawner : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] private int objectCount = 15;
-
     [SerializeField] private float minDistanceBetweenObjects = 0.5f;
-
     [SerializeField] private float minDistanceFromEdge = 0.2f;
-
-    [SerializeField] private float heightOffset = 0.01f;
-
+    [SerializeField] private float heightOffset = 0.001f;
 
     [SerializeField] private bool randomRotation = true;
 
     [SerializeField] private bool randomScale = true;
-    [SerializeField] private float minScale = 0.8f;
-    [SerializeField] private float maxScale = 1.2f;
+    [SerializeField] private float minScale = 0.5f;
+    [SerializeField] private float maxScale = 0.8f;
 
-    private List<GameObject> spawnedObjects = new List<GameObject>();
-    private List<Vector3> spawnedPositions = new List<Vector3>();
-    private List<float> spawnedRadii = new List<float>();
+    private readonly List<GameObject> spawnedObjects = new();
+    private readonly List<Vector3> spawnedPositions = new();
+    private readonly List<float> spawnedRadii = new();
 
     public void SpawnBackgroundObjects()
     {
@@ -42,9 +38,7 @@ public class BackgroundObjectSpawner : MonoBehaviour
 
         var planes = new List<ARPlane>();
         foreach (var plane in planeManager.trackables)
-        {
             planes.Add(plane);
-        }
 
         if (planes.Count == 0)
         {
@@ -53,24 +47,20 @@ public class BackgroundObjectSpawner : MonoBehaviour
         }
 
         int successfulSpawns = 0;
+
         for (int i = 0; i < objectCount; i++)
         {
-            int countBefore = spawnedObjects.Count;
+            int before = spawnedObjects.Count;
             SpawnSingleObject(planes);
-            if (spawnedObjects.Count > countBefore)
-            {
+            if (spawnedObjects.Count > before)
                 successfulSpawns++;
-            }
         }
 
         Debug.Log($"BackgroundObjectSpawner: Created {successfulSpawns}/{objectCount} background objects");
     }
 
-
     private void SpawnSingleObject(List<ARPlane> planes)
     {
-        if (planes.Count == 0) return;
-
         ARPlane randomPlane = planes[Random.Range(0, planes.Count)];
         GameObject prefab = backgroundPrefabs[Random.Range(0, backgroundPrefabs.Count)];
 
@@ -79,12 +69,10 @@ public class BackgroundObjectSpawner : MonoBehaviour
 
         Vector3 spawnPosition = Vector3.zero;
         bool validPositionFound = false;
-        int maxAttempts = 15;
 
-        for (int attempt = 0; attempt < maxAttempts; attempt++)
+        for (int i = 0; i < 15; i++)
         {
             spawnPosition = GetRandomPointOnPlane(randomPlane);
-
             if (IsPositionValid(spawnPosition, objectRadius))
             {
                 validPositionFound = true;
@@ -93,23 +81,51 @@ public class BackgroundObjectSpawner : MonoBehaviour
         }
 
         if (!validPositionFound)
-        {
-            Debug.LogWarning($"BackgroundObjectSpawner: Could not find valid position for object after {maxAttempts} attempts.");
             return;
+
+        // ===== ROOT (kfiatek9) =====
+        GameObject root = Instantiate(prefab, spawnPosition, Quaternion.identity);
+
+        // LOSOWA ROTACJA ROOT
+        if (randomRotation)
+        {
+            root.transform.rotation = Quaternion.Euler(
+                0f,
+                Random.Range(0f, 360f),
+                0f
+            );
         }
 
-        Quaternion rotation = randomRotation
-            ? Quaternion.Euler(0, Random.Range(0f, 360f), 0)
-            : Quaternion.identity;
-
-        GameObject newObject = Instantiate(prefab, spawnPosition, rotation);
-
+        // SKALA ROOT
         if (randomScale)
         {
-            newObject.transform.localScale = prefab.transform.localScale * scaleMultiplier;
+            root.transform.localScale =
+                prefab.transform.localScale * scaleMultiplier;
         }
 
-        spawnedObjects.Add(newObject);
+        // ===== ANIMACJA (NA DZIECKU) =====
+        Animator animator = root.GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            // LOSOWY KIERUNEK BUJANIA (0–360°)
+            float swayDirection = Random.Range(0f, 360f);
+            animator.transform.localRotation = Quaternion.Euler(
+                0f,
+                swayDirection,
+                0f
+            );
+
+            // LOSOWA FAZA + PRÊDKOŒÆ
+            animator.Play("Armature.002Action", 0, Random.value);
+            animator.speed = Random.Range(0.8f, 1.2f);
+        }
+
+        else
+        {
+            Debug.LogWarning("Spawned object has NO Animator!");
+        }
+
+        spawnedObjects.Add(root);
         spawnedPositions.Add(spawnPosition);
         spawnedRadii.Add(objectRadius);
     }
@@ -118,15 +134,11 @@ public class BackgroundObjectSpawner : MonoBehaviour
     {
         for (int i = 0; i < spawnedPositions.Count; i++)
         {
-            Vector3 existingPos = spawnedPositions[i];
-            float existingRadius = spawnedRadii[i];
+            float requiredDistance =
+                newObjectRadius + spawnedRadii[i] + minDistanceBetweenObjects;
 
-            float requiredDistance = newObjectRadius + existingRadius + minDistanceBetweenObjects;
-
-            if (Vector3.Distance(position, existingPos) < requiredDistance)
-            {
+            if (Vector3.Distance(position, spawnedPositions[i]) < requiredDistance)
                 return false;
-            }
         }
         return true;
     }
@@ -134,47 +146,36 @@ public class BackgroundObjectSpawner : MonoBehaviour
     private float GetObjectRadius(GameObject prefab)
     {
         Renderer renderer = prefab.GetComponentInChildren<Renderer>();
-        if (renderer != null)
-        {
-            Bounds localBounds = renderer.bounds;
-            Vector3 prefabScale = prefab.transform.localScale;
+        if (renderer == null)
+            return 0.5f;
 
-            float sizeX = localBounds.size.x;
-            float sizeZ = localBounds.size.z;
-
-            return Mathf.Max(sizeX, sizeZ) / 2f;
-        }
-
-        return 0.5f;
+        Bounds bounds = renderer.bounds;
+        return Mathf.Max(bounds.size.x, bounds.size.z) * 0.5f;
     }
 
     private Vector3 GetRandomPointOnPlane(ARPlane plane)
     {
         Vector2 size = plane.size;
 
-        float maxX = (size.x / 2f) - minDistanceFromEdge;
-        float maxY = (size.y / 2f) - minDistanceFromEdge;
+        float maxX = Mathf.Max((size.x * 0.5f) - minDistanceFromEdge, 0.1f);
+        float maxY = Mathf.Max((size.y * 0.5f) - minDistanceFromEdge, 0.1f);
 
-        maxX = Mathf.Max(maxX, 0.1f);
-        maxY = Mathf.Max(maxY, 0.1f);
-
-        Vector2 randomPoint2D = new Vector2(
+        Vector2 random2D = new(
             Random.Range(-maxX, maxX),
             Random.Range(-maxY, maxY)
         );
 
-        return plane.transform.TransformPoint(new Vector3(randomPoint2D.x, heightOffset, randomPoint2D.y));
+        return plane.transform.TransformPoint(
+            new Vector3(random2D.x, heightOffset, random2D.y)
+        );
     }
 
     public void ClearPreviousObjects()
     {
         foreach (var obj in spawnedObjects)
-        {
             if (obj != null)
-            {
                 Destroy(obj);
-            }
-        }
+
         spawnedObjects.Clear();
         spawnedPositions.Clear();
         spawnedRadii.Clear();

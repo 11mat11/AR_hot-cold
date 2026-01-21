@@ -388,7 +388,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BackgroundObjectSpawner
   planeManager: {fileID: 151853166}
   backgroundPrefabs:
-  - {fileID: 8275239744423275130, guid: 6c599f416f36e55468310e19b5b4a65e, type: 3}
+  - {fileID: 5332239953356089906, guid: a83cf43b56227b1489be06c65a13ae0d, type: 3}
   objectCount: 15
   minDistanceBetweenObjects: 1
   minDistanceFromEdge: 0.3
