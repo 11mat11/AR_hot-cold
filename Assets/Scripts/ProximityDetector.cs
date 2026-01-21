@@ -65,6 +65,7 @@ public class ProximityDetector : MonoBehaviour
 
         CheckQuickBillAchievement();
         CheckCenterOfTheFieldAchievement();
+        CheckEdgeCaseAchievement();
 
         if (ScoreManager.Instance != null)
             ScoreManager.Instance.RegisterObjectFound();
@@ -131,6 +132,29 @@ public class ProximityDetector : MonoBehaviour
         if (distanceToCenter < 1.5f)
         {
             GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_center_of_the_field);
+        }
+    }
+
+    private void CheckEdgeCaseAchievement()
+    {
+        if (creator == null) return;
+
+        float totalArea = creator.GetTotalScanArea();
+        float minAreaRequired = 50.0f / 3f;
+
+        if (totalArea < minAreaRequired) return;
+
+        Vector3 scanCenter = creator.GetScanCenter();
+        float distanceToCenter = Vector3.Distance(transform.position, scanCenter);
+
+        float approximateRadius = Mathf.Sqrt(totalArea / Mathf.PI);
+
+        float edgeZoneStart = approximateRadius * 0.99f;
+
+        if (distanceToCenter >= edgeZoneStart)
+        {
+            Debug.Log("Edge Case Achievement Unlocked");
+            GPGSManager.Instance?.UnlockAchievement(GPGSIds.achievement_edge_case);
         }
     }
 }
